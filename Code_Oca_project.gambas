@@ -1,5 +1,33 @@
  ' Gambas class file
 
+ ' Formulario FMain
+Public Sub btn_instrucciones_Click()
+  Instrucciones.Show
+End
+Public Sub btn_inicio_Click()
+  FMain.Close()
+  Jugadores.Show()
+End
+
+ ' Formulario instrucciones
+Public Sub btn_casillas_Click()
+  Instrucciones.Close()
+  Especiales.Show()
+End
+
+' Formulario jugadores
+Public n As Byte
+Public Sub btn_jugar_Click()
+  Dim n1 As String
+  'Convertir de string a byte
+  n1 = Trim(txtjugadores.text)
+  n = CInt(n1)
+  'Cerrar ventana, abrir juego
+  Jugadores.hide()
+  Tablero.Show()
+End
+
+ ' Formulario del tablero 
   Private fichas[6] As Object
   Private turnos_perdidos[6] As Byte
   Private casilla[6] As Byte
@@ -406,5 +434,8 @@ Public Sub ultima()
       fichas[jactiv].y = cooy[av]
       Wait 0.5
     Next
+    casilla[jactiv] = av_1 + 1
+    'Evaluar en que casilla quedo
+    evaluar()
   Endif
 End

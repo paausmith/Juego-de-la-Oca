@@ -1,0 +1,410 @@
+ ' Gambas class file
+
+  Private fichas[6] As Object
+  Private turnos_perdidos[6] As Byte
+  Private casilla[6] As Byte
+  Private num_dado[6] As String
+  Private coox[63] As Short
+  Private cooy[63] As Short
+  Private paro As Boolean
+  Private dado As Byte
+  Private jactiv As Byte
+  Private bandera As Boolean
+
+Public Sub Form_Open()
+  Dim y As Byte
+  Dim y_1 As Byte
+  Dim y_2 As Byte
+  'Asignar fichas
+  asig_fichas()
+  'Coordenadas
+  coox[0] = 231
+  cooy[0] = 560
+  coox[1] = 280
+  coox[2] = 343
+  coox[3] = 399
+  coox[4] = 455
+  coox[5] = 525
+  coox[6] = 588
+  For y = 1 To 6
+    cooy[y] = 588
+  Next
+  coox[7] = 644
+  cooy[7] = 581
+  coox[8] = 714
+  cooy[8] = 553
+  coox[9] = 777
+  cooy[9] = 511
+  coox[10] = 812
+  cooy[10] = 462
+  coox[11] = 833
+  cooy[11] = 406
+  coox[12] = 847
+  cooy[12] = 357
+  coox[13] = 847
+  cooy[13] = 287
+  coox[14] = 840
+  cooy[14] = 224
+  coox[15] = 819
+  cooy[15] = 168
+  coox[16] = 784 
+  cooy[16] = 119
+  coox[17] = 721
+  cooy[17] = 70
+  coox[18] = 637
+  cooy[18] = 35
+  coox[19] = 547
+  coox[20] = 511
+  coox[21] = 455
+  coox[22] = 392
+  coox[23] = 336
+  coox[24] = 273
+  coox[25] = 217
+  For y_1 = 19 To 25
+    cooy[y_1] = 28
+  Next
+  coox[26] = 154
+  cooy[26] = 49
+  coox[27] = 112
+  cooy[27] = 91
+  coox[28] = 70
+  cooy[28] = 126
+  coox[29] = 49
+  cooy[29] = 182
+  coox[30] = 35
+  cooy[30] = 231
+  coox[31] = 42
+  cooy[31] = 308
+  coox[32] = 49
+  cooy[32] = 364
+  coox[33] = 91
+  cooy[33] = 399
+  coox[34] = 126
+  cooy[34] = 448
+  coox[35] = 168
+  cooy[35] = 476
+  coox[36] = 224
+  cooy[36] = 504
+  coox[37] = 280
+  coox[38] = 343
+  coox[39] = 399
+  coox[40] = 455
+  coox[41] = 525
+  coox[42] = 588
+  For y_2 = 37 To 42
+    cooy[y_2] = 497
+  Next
+  coox[43] = 651
+  cooy[43] = 483
+  coox[44] = 714
+  cooy[44] = 441
+  coox[45] = 742
+  cooy[45] = 385
+  coox[46] = 763
+  cooy[46] = 329
+  coox[47] = 763
+  cooy[47] = 273
+  coox[48] = 735
+  cooy[48] = 224
+  coox[49] = 693
+  cooy[49] = 168
+  coox[50] = 630
+  cooy[50] = 126
+  coox[51] = 546
+  cooy[51] = 119
+  coox[52] = 469
+  cooy[52] = 126
+  coox[53] = 399
+  cooy[53] = 126
+  coox[54] = 336
+  cooy[54] = 119
+  coox[55] = 273
+  cooy[55] = 119
+  coox[56] = 217
+  cooy[56] = 126
+  coox[57] = 161
+  cooy[57] = 182
+  coox[58] = 133
+  cooy[58] = 266
+  coox[59] = 147
+  cooy[59] = 329
+  coox[60] = 175
+  cooy[60] = 378
+  coox[61] = 231
+  cooy[61] = 406
+  coox[62] = 308
+  cooy[62] = 399
+  'Inicio del juego
+  jactiv = 0
+  lbl_accion.text = " Que empiece el juego !! \nJugador " & (jactiv + 1) & " te toca tirar"
+End
+
+'SUBRUTINA DE FICHAS
+Public Sub asig_fichas()
+  Dim x As Byte
+  'Asignar cada picture box a cada indice del arreglo
+  fichas[0] = f1
+  fichas[1] = f2
+  fichas[2] = f3
+  fichas[3] = f4
+  fichas[4] = f5
+  fichas[5] = f6
+  'Habilitar fichas
+ 
+ While x < Jugadores.n
+    fichas[x].visible = True
+    fichas[x].enabled = True
+    Inc x
+ Wend
+End
+
+'SUBRUTINA DE DADO
+Public Sub tiro_dado()
+  Dim x As Byte
+  num_dado[0] = "dado1.jpg"
+  num_dado[1] = "dado2.jpg"
+  num_dado[2] = "dado3.jpg"
+  num_dado[3] = "dado4.jpg"
+  num_dado[4] = "dado5.jpg"
+  num_dado[5] = "dado6.jpg"
+  paro = False
+  'Poner numeros del dado aleatoriamente
+  Repeat
+    x = Int(Rnd(0, 5.99))
+    cuadro_dado.Picture = Picture[num_dado[x]]
+    cuadro_dado.visible = True
+    Wait 0.3
+  Until paro = True
+  'Imprimir y asignar casillas que se avanzan
+  dado = x + 1
+  lbl_casillas.text = "Avanzas " & dado & " casillas"
+End
+
+'SUBRUTINAS DE BOTONES
+Public Sub btn_tirar_Click()
+  tiro_dado()
+End
+Public Sub btn_parar_Click()
+  paro = True
+End
+Public Sub btn_avanza_Click()
+  'Boton color
+  btn_avanza.Background = &7F0F2B&
+  btn_avanza.Foreground = &FFFFFF&
+  'Si no tienes turnos perdidos
+  If turnos_perdidos[jactiv] = 0 Then
+    'Suma de casillas, actual+valor del dado
+    casilla[jactiv] = casilla[jactiv] + dado
+    Select Case casilla[jactiv]
+      Case 55
+        carcel()
+      Case 57
+        calavera()
+      Case 25, 52
+        cdados()
+      Case 41
+        laberinto()
+      Case 4, 8, 13, 17, 22, 26, 31, 35, 40, 44, 49, 53, 58
+        oca()
+      Case 5, 11
+        puente()
+      Case 18
+        posada()
+      'Case 30
+        'pozo()
+      Case 62, 63, 64, 65, 66, 67
+        ultima()
+      Default
+        otro()
+    End Select
+  'Si tienes turnos perdidos
+  Else 
+    Print "Pierdes un turno"
+    Dec turnos_perdidos[jactiv]
+  Endif
+  'Siguiente jugador
+  Inc jactiv
+  If jactiv > Jugadores.n - 1 Then
+    jactiv = 0
+  Endif
+  lbl_accion.text = "Jugador " & (jactiv + 1) & " te toca tirar! suerte!"
+  btn_avanza.Background = &FFFFFF&
+  btn_avanza.Foreground = &000000&
+  If bandera = True Then
+    lbl_accion.text = "PARTIDA TERMINADA, YA HAY UN GANADOR!"
+    btn_avanza.enabled = False
+  Endif
+End
+
+'SUBRUTINAS DE CASILLAS 
+Public Sub otro()
+  Dim av As Byte
+  For av = casilla[jactiv] - dado To casilla[jactiv]
+    fichas[jactiv].x = coox[av]
+    fichas[jactiv].y = cooy[av]
+    Wait 0.5
+  Next
+End
+
+Public Sub carcel()
+  lbl_especial.text = "Carcel!"
+  Wait 1
+  turnos_perdidos[jactiv] = 2
+  lbl_especial.text = " "
+End
+
+Public Sub calavera()
+  Dim av As Byte
+  lbl_especial.text = "Calavera!"
+  For av = casilla[jactiv] - dado To 0 Step -1
+    fichas[jactiv].x = coox[av]
+    fichas[jactiv].y = cooy[av]
+    Wait 0.5
+  Next
+  lbl_especial.text = " "
+End
+
+Public Sub cdados()
+  Dim av As Byte
+  lbl_especial.text = "Dados!"
+  For av = casilla[jactiv] - dado To casilla[jactiv] + 8
+    fichas[jactiv].x = coox[av]
+    fichas[jactiv].y = cooy[av]
+    Wait 0.5
+  Next
+  lbl_especial.text = " "
+End
+
+Public Sub laberinto()
+  Dim av As Byte
+  lbl_especial.text = "Laberinto!"
+  For av = casilla[jactiv] - dado To 29 Step -1
+    fichas[jactiv].x = coox[av]
+    fichas[jactiv].y = cooy[av]
+    Wait 0.5
+  Next
+  lbl_especial.text = " "
+End
+
+Public Sub oca()
+  Dim un As Byte
+  Dim av As Byte
+  bandera = False
+  lbl_especial.text = "Oca!"
+  Select Case casilla[jactiv]
+    Case 4
+      For av = casilla[jactiv] - dado To 8
+        fichas[jactiv].x = coox[av]
+        fichas[jactiv].y = cooy[av]
+        Wait 0.5
+      Next
+    Case 8
+      For av = casilla[jactiv] - dado To 13
+        fichas[jactiv].x = coox[av]
+        fichas[jactiv].y = cooy[av]
+        Wait 0.5
+      Next
+    Case 13
+      For av = casilla[jactiv] - dado To 17
+        fichas[jactiv].x = coox[av]
+        fichas[jactiv].y = cooy[av]
+        Wait 0.5
+      Next
+    Case 44
+      For av = casilla[jactiv] - dado To 50
+        fichas[jactiv].x = coox[av]
+        fichas[jactiv].y = cooy[av]
+        Wait 0.5
+      Next
+    Case 53
+      For av = casilla[jactiv] - dado To 59
+        fichas[jactiv].x = coox[av]
+        fichas[jactiv].y = cooy[av]
+        Wait 0.5
+      Next
+      Default
+        un = ((casilla[jactiv] - dado) Mod 10)
+        If un = 7 Or un = 6 Or un = 5 Then
+          For av = casilla[jactiv] - dado To casilla[jactiv] + 5
+            fichas[jactiv].x = coox[av]
+            fichas[jactiv].y = cooy[av]
+            Wait 0.5
+          Next
+        Else If un = 2 Or un = 1 Or un = 0 Or un = 9 Then
+          For av = casilla[jactiv] - dado To casilla[jactiv] + 4
+            fichas[jactiv].x = coox[av]
+            fichas[jactiv].y = cooy[av]
+            Wait 0.5
+          Next
+        Endif
+  End Select
+  lbl_especial.text = " "
+End
+
+Public Sub puente()
+  Dim av As Byte
+  lbl_especial.text = "Puente!"
+  If casilla[jactiv] = 6 Then
+    For av = casilla[jactiv] - dado To 12
+      fichas[jactiv].x = coox[av]
+      fichas[jactiv].y = cooy[av]
+      Wait 0.5
+    Next
+  Else
+    For av = casilla[jactiv] - dado To 6
+      fichas[jactiv].x = coox[av]
+      fichas[jactiv].y = cooy[av]
+      Wait 0.5
+    Next
+  Endif
+  lbl_especial.text = " "
+End
+
+Public Sub posada()
+  lbl_especial.text = "Posada!"
+  Wait 1
+  turnos_perdidos[jactiv] = 1
+  lbl_especial.text = " "
+End
+
+'Public Sub pozo()
+  'av = 0
+  'lbl_accion.text = "Pozo!"
+  'If Jugadores.n = 2
+    'otro()
+  'Else
+    'turnos_perdidos[jactiv] = 99
+  'Endif
+'End
+
+Public Sub ultima()
+  Dim resta As Byte
+  Dim av_1 As Byte
+  Dim av As Byte
+  If casilla[jactiv] = 62 Then
+    For av = casilla[jactiv] - dado To casilla[62]
+      fichas[jactiv].x = coox[av]
+      fichas[jactiv].y = cooy[av]
+      Wait 0.5
+    Next
+    lbl_accion.text = " "
+    Message.Info("Felicidades! Has ganado")
+    bandera = True
+  Else 
+    'Si se pasa de la casilla 63
+    lbl_accion.text = "Ups!Te pasaste del 63"
+    resta = casilla[jactiv] - 62 
+    'Llegar a la 63
+    For av = casilla[jactiv] - dado To casilla[62]
+      fichas[jactiv].x = coox[av]
+      fichas[jactiv].y = cooy[av]
+      Wait 0.5
+    Next
+    'Regresarse la diferencia 
+    For av_1 = casilla[62] To casilla[62 - resta] Step -1
+      fichas[jactiv].x = coox[av]
+      fichas[jactiv].y = cooy[av]
+      Wait 0.5
+    Next
+  Endif
+End
